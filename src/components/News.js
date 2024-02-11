@@ -254,24 +254,74 @@ export class News extends Component {
     constructor(){
         super();
         console.log('This is constructor');
+        
         this.state = {
-            articles: this.articles,
-            loading: false
+            articles: [],
+            loading: false,
+            page:1
         }
         
     }
+
+    async componentDidMount(){
+        let url ="https://newsapi.org/v2/top-headlines?country=in&apiKey=69e58ca2fb8349528f087079c7145bff&pageSize=18";
+        let data = await fetch(url)
+        let parsedData =await data.json()
+        console.log(parsedData);
+        this.setState({articles: parsedData.articles,totalResults:parsedData.totalResults})
+        
+    }
+
+    handlePrevPage =async ()=>{
+        console.log('prev');
+        let url =`https://newsapi.org/v2/top-headlines?country=in&apiKey=69e58ca2fb8349528f087079c7145bff&page=${this.state.page - 1}&pageSize=18`;
+        let data = await fetch(url)
+        let parsedData =await data.json()
+        console.log(parsedData);
+
+        this.setState({
+            page: this.state.page - 1,
+            articles: parsedData.articles
+        })
+    }
+
+    handleNextPage =async ()=>{
+        console.log('next');
+        if(this.state.page + 1 > Math.ceil(this.state.totalResults/18))
+        {
+            console.log('Overdose');
+            
+        }
+        else{
+                let url =`https://newsapi.org/v2/top-headlines?country=in&apiKey=69e58ca2fb8349528f087079c7145bff&page=${this.state.page + 1}&pageSize=18`;
+                let data = await fetch(url)
+                let parsedData =await data.json()
+                console.log(parsedData);
+                this.setState({
+                page: this.state.page + 1,
+                articles: parsedData.articles
+                })
+    }
+    }
+
     render() {
         return (
+            <>
         <div className='container my-3'>
             <h2>NewsTea Top News</h2>
             <div className="row">
                 {this.state.articles.map((element)=>{
                     return <div className="col md-3 my-3" key={element.url}>
-                        <NewsItem title={element.title} description={element.description} imgUrl={element.urlToImage}/>
+                        <NewsItem title={element.title?element.title.slice(0,45):" "} description={element.description?element.description.slice(0,88):" "} imgUrl={element.urlToImage?element.urlToImage:"https://sportshub.cbsistatic.com/i/r/2024/02/05/f9cac787-04df-4520-b32b-822e8342f993/thumbnail/1200x675/cf353fa0f098b03f8bfc75f0adedf8d6/getty-patrick-mahomes-chiefs-week-19.jpg"} newsUrl={element.url}/>
                     </div>
                 })}
             </div>
         </div>
+        <div className="container d-flex justify-content-between my-2">
+        <button disabled={this.state.page <= 1} type="button" onClick={this.handlePrevPage} className="btn btn-dark">&larr; Previous</button>
+        <button type="button" disabled={this.state.page + 2 > Math.ceil(this.state.totalResults/18)} onClick={this.handleNextPage} className="btn btn-dark">Next &rarr;</button>
+        </div>
+        </>
         )
     }
 }
