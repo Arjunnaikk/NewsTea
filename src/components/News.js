@@ -325,12 +325,12 @@ export class News extends Component {
         return (
             <>
         <div className='container my-3'>
-            <h2>NewsTea Top News</h2>
+            <h2 className='text-center' style={{fontWeight:"700",fontSize:"40px"}}>NewsTea Top News</h2>
             {this.state.loading && <Spinner/>}
             <div className="row">
                 {!this.state.loading && this.state.articles.map((element)=>{
                     return <div className="col md-3 my-3" key={element.url}>
-                        <NewsItem title={element.title?element.title.slice(0,45):" "} description={element.description?element.description.slice(0,88):" "} imgUrl={element.urlToImage?element.urlToImage:"https://sportshub.cbsistatic.com/i/r/2024/02/05/f9cac787-04df-4520-b32b-822e8342f993/thumbnail/1200x675/cf353fa0f098b03f8bfc75f0adedf8d6/getty-patrick-mahomes-chiefs-week-19.jpg"} newsUrl={element.url}/>
+                        <NewsItem title={element.title?element.title.slice(0,45):" "} description={element.description?element.description.slice(0,88):" "} imgUrl={element.urlToImage?element.urlToImage:"https://sportshub.cbsistatic.com/i/r/2024/02/05/f9cac787-04df-4520-b32b-822e8342f993/thumbnail/1200x675/cf353fa0f098b03f8bfc75f0adedf8d6/getty-patrick-mahomes-chiefs-week-19.jpg"} newsUrl={element.url} author={element.author} publishedAt={element.publishedAt} source={element.source.name}/>
                     </div>
                 })}
             </div>
